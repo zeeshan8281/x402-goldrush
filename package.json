@@ -1,0 +1,16 @@
+{
+  "name": "x402-goldrush-demo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5",
+    "viem": "^2.21.37",
+    "x402-axios": "*",
+    "x402-express": "^0.7.3"
+  }
+}

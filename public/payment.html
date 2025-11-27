@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>X402 Checkout → GoldRush Streams</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #050816;
+        --bg-elevated: #0b1020;
+        --accent: #38bdf8;
+        --accent-soft: rgba(56, 189, 248, 0.1);
+        --border-subtle: rgba(148, 163, 184, 0.3);
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+        --danger: #f97373;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          sans-serif;
+        background: radial-gradient(circle at top, #1d283a, var(--bg));
+        color: var(--text-main);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 480px;
+        background: linear-gradient(135deg, #050816, #020617);
+        border-radius: 24px;
+        border: 1px solid var(--border-subtle);
+        box-shadow: 0 24px 80px rgba(15, 23, 42, 0.85);
+        padding: 28px 28px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: -40%;
+        background: radial-gradient(
+          circle at 0% 0%,
+          rgba(56, 189, 248, 0.18),
+          transparent 55%
+        );
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .card-inner {
+        position: relative;
+        z-index: 1;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.88);
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        color: var(--text-muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 14px;
+      }
+
+      .pill-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #4ade80;
+        box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.21);
+      }
+
+      h1 {
+        font-size: 24px;
+        line-height: 1.2;
+        margin-bottom: 8px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 18px;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 18px;
+      }
+
+      .badge {
+        font-size: 11px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        color: var(--text-muted);
+      }
+
+      .price-box {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+
+      .price-main {
+        font-size: 28px;
+        font-weight: 600;
+      }
+
+      .price-unit {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      .hint {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+      }
+
+      .hint span {
+        color: var(--accent);
+      }
+
+      button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        border-radius: 999px;
+        border: none;
+        padding: 10px 16px;
+        background: radial-gradient(circle at 0% 0%, #38bdf8, #0ea5e9);
+        color: #0b1120;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.12s ease-out, box-shadow 0.12s ease-out,
+          filter 0.12s ease-out;
+        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.45);
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.05);
+        box-shadow: 0 14px 40px rgba(56, 189, 248, 0.6);
+      }
+
+      button:active {
+        transform: translateY(0);
+        box-shadow: 0 6px 20px rgba(15, 23, 42, 0.7);
+      }
+
+      button[disabled] {
+        cursor: default;
+        opacity: 0.7;
+        box-shadow: none;
+        transform: none;
+      }
+
+      .btn-glow {
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        background: radial-gradient(
+          circle at 0 0,
+          rgba(248, 250, 252, 0.7),
+          transparent 60%
+        );
+        mix-blend-mode: soft-light;
+        opacity: 0.6;
+        pointer-events: none;
+      }
+
+      .btn-label-main {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn-icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 5px;
+        background: rgba(15, 23, 42, 0.94);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent);
+        font-size: 11px;
+      }
+
+      .btn-sub {
+        font-size: 11px;
+        color: rgba(15, 23, 42, 0.9);
+        opacity: 0.9;
+      }
+
+      .status {
+        font-size: 12px;
+        margin-top: 14px;
+        min-height: 18px;
+      }
+
+      .status.ok {
+        color: #4ade80;
+      }
+
+      .status.error {
+        color: var(--danger);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="card-inner">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span>Step 1 · X402 Checkout</span>
+        </div>
+
+        <h1>Unlock GoldRush Streaming Dashboard</h1>
+        <p class="subtitle">
+          Pay for access using the
+          <strong>HTTP 402 / X402 payment gateway</strong>, then jump straight
+          into live BASE_MAINNET streams.
+        </p>
+
+        <div class="badge-row">
+          <span class="badge">X402-native access control</span>
+          <span class="badge">BASE_MAINNET</span>
+          <span class="badge">GoldRush Streaming API</span>
+        </div>
+
+        <div class="price-box">
+          <span class="price-main">0.002</span>
+          <span class="price-unit">ETH · one-time demo access</span>
+        </div>
+
+        <p class="hint">
+          This page assumes your origin is running <strong>behind a real X402
+          gateway</strong>. The gateway will respond with
+          <code>402 Payment Required</code> and your X402-capable wallet or
+          client will handle the payment challenge.
+        </p>
+
+        <button id="payBtn">
+          <span class="btn-glow"></span>
+          <span class="btn-label-main">
+            <span class="btn-icon">₿</span>
+            <span>Pay with X402 &amp; Continue</span>
+          </span>
+          <span class="btn-sub">You’ll be redirected to the live stream app</span>
+        </button>
+
+        <div id="status" class="status"></div>
+      </div>
+    </div>
+
+    <script>
+      const payBtn = document.getElementById("payBtn");
+      const statusEl = document.getElementById("status");
+
+      async function payViaBackend() {
+        statusEl.textContent = "Initiating X402 payment from backend wallet…";
+        statusEl.className = "status";
+        payBtn.disabled = true;
+
+        try {
+          const res = await fetch("/api/x402-pay", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ reason: "unlock-app" })
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          if (!res.ok || !data.ok) {
+            throw new Error(data.error || `Payment failed with ${res.status}`);
+          }
+
+          statusEl.textContent =
+            "Payment successful. Redirecting you to the streaming app…";
+          statusEl.className = "status ok";
+
+          setTimeout(() => {
+            window.location.href = "/app";
+          }, 900);
+        } catch (err) {
+          console.error(err);
+          statusEl.textContent =
+            "Payment failed. Check server logs or try again in a few seconds.";
+          statusEl.className = "status error";
+          payBtn.disabled = false;
+        }
+      }
+
+      payBtn.addEventListener("click", payViaBackend);
+    </script>
+  </body>
+</html>
+
+

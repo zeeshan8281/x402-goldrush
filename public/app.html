@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GoldRush Streams · BASE_MAINNET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #020617;
+        --bg-elevated: #020617;
+        --panel: #020617;
+        --accent: #22d3ee;
+        --accent-soft: rgba(34, 211, 238, 0.12);
+        --border-subtle: rgba(148, 163, 184, 0.3);
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+        --danger: #fb7185;
+        --success: #4ade80;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          sans-serif;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top, rgba(34, 211, 238, 0.2), transparent 55%),
+          radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.2), transparent 55%),
+          var(--bg);
+        color: var(--text-main);
+        padding: 18px 18px 26px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .logo-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo-mark {
+        width: 32px;
+        height: 32px;
+        border-radius: 12px;
+        background:
+          radial-gradient(circle at 20% 0, #22d3ee, #0ea5e9 45%, #0f172a 100%);
+        box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.35),
+          0 18px 40px rgba(15, 23, 42, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: #0b1120;
+      }
+
+      .logo-text-main {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .logo-text-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .env-pill {
+        font-size: 11px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--text-muted);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+        box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.28);
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: minmax(0, 2.3fr) minmax(0, 1.4fr);
+        gap: 16px;
+        flex: 1;
+      }
+
+      @media (max-width: 880px) {
+        main {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+
+      .panel {
+        border-radius: 18px;
+        border: 1px solid var(--border-subtle);
+        background: radial-gradient(circle at top, rgba(15, 23, 42, 0.7), #020617);
+        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.9);
+        padding: 16px 16px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-height: 0;
+      }
+
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .panel-title {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .panel-subtitle {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .tag {
+        font-size: 10px;
+        padding: 3px 7px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: rgba(15, 23, 42, 0.95);
+        color: var(--text-muted);
+      }
+
+      .tag.accent {
+        border-color: rgba(45, 212, 191, 0.8);
+        background: rgba(15, 23, 42, 0.97);
+        color: #a5f3fc;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .pill-select {
+        padding: 5px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        background: rgba(15, 23, 42, 0.95);
+        color: var(--text-main);
+        font-size: 11px;
+      }
+
+      button {
+        border-radius: 999px;
+        border: none;
+        padding: 6px 12px;
+        background: linear-gradient(135deg, #06b6d4, #22c55e);
+        color: #020617;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 10px 26px rgba(8, 47, 73, 0.9);
+      }
+
+      button.secondary {
+        background: rgba(15, 23, 42, 0.95);
+        color: var(--text-muted);
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        box-shadow: none;
+      }
+
+      button small {
+        opacity: 0.8;
+      }
+
+      button:disabled {
+        opacity: 0.65;
+        cursor: default;
+        box-shadow: none;
+      }
+
+      .stream-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 11px;
+      }
+
+      .stream-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: #f97316;
+        box-shadow: 0 0 0 5px rgba(248, 113, 113, 0.3);
+      }
+
+      .stream-dot.live {
+        background: #22c55e;
+        box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.35);
+      }
+
+      .stream-status span {
+        color: var(--text-muted);
+      }
+
+      .stream-status strong {
+        color: var(--text-main);
+      }
+
+      .error-text {
+        color: var(--danger);
+      }
+
+      .success-text {
+        color: var(--success);
+      }
+
+      .table-wrapper {
+        border-radius: 14px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617);
+        overflow: hidden;
+        min-height: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+      }
+
+      thead {
+        background: rgba(15, 23, 42, 0.98);
+      }
+
+      th,
+      td {
+        padding: 7px 10px;
+        text-align: left;
+        border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+        white-space: nowrap;
+      }
+
+      th {
+        font-weight: 500;
+        color: var(--text-muted);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+      }
+
+      tbody tr:nth-child(even) {
+        background: rgba(15, 23, 42, 0.82);
+      }
+
+      tbody tr:nth-child(odd) {
+        background: rgba(15, 23, 42, 0.94);
+      }
+
+      .numeric {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .token-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .token-symbol {
+        font-size: 11px;
+      }
+
+      .token-name {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      .empty-state {
+        font-size: 11px;
+        color: var(--text-muted);
+        padding: 18px 18px 16px;
+      }
+
+      .side-panel-section {
+        border-radius: 14px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: rgba(15, 23, 42, 0.97);
+        padding: 12px 13px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .side-label {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .metric-main {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .metric-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .code {
+        font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 10px;
+        background: rgba(15, 23, 42, 0.96);
+        border-radius: 10px;
+        padding: 7px 8px;
+        border: 1px solid rgba(30, 64, 175, 0.9);
+        color: #e5e7eb;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo-row">
+        <div class="logo-mark">X₄</div>
+        <div>
+          <div class="logo-text-main">GoldRush Streaming Dashboard</div>
+          <div class="logo-text-sub">Gated by X402 · Powered by BASE_MAINNET</div>
+        </div>
+      </div>
+      <div class="env-pill">
+        <span class="dot" id="wsDot"></span>
+        <span id="wsStatus">Connecting to WebSocket…</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">OHLCV Candles · BASE_MAINNET</div>
+            <div class="panel-subtitle">
+              Live price + volume updates for a configured token address.
+            </div>
+          </div>
+          <div class="controls">
+            <select id="intervalSelect" class="pill-select">
+              <option value="ONE_MINUTE">1m candles</option>
+              <option value="FIVE_MINUTES">5m candles</option>
+              <option value="ONE_HOUR">1h candles</option>
+            </select>
+            <button id="reconnectBtn" class="secondary">
+              ⟳ <span>Reconnect</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="stream-status" id="streamStatus">
+          <span class="stream-dot" id="streamDot"></span>
+          <span id="streamText">Waiting for stream…</span>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp (UTC)</th>
+                <th class="numeric">Open</th>
+                <th class="numeric">High</th>
+                <th class="numeric">Low</th>
+                <th class="numeric">Close</th>
+                <th class="numeric">Volume</th>
+                <th>Base Token</th>
+              </tr>
+            </thead>
+          </table>
+          <div id="tableBodyContainer" style="overflow-y: auto; max-height: 380px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <div id="emptyState" class="empty-state">
+            No data yet. Waiting for first candle from GoldRush…
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Configuration</div>
+            <div class="panel-subtitle">
+              BASE_MAINNET token + subscription parameters.
+            </div>
+          </div>
+          <div class="tag-row">
+            <span class="tag accent">BASE_MAINNET</span>
+            <span class="tag">GraphQL over WebSocket</span>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="side-panel-section">
+            <div class="side-label">GoldRush Token Address</div>
+            <div class="metric-main" id="tokenAddrShort">
+              0x0b3e…7e1b
+            </div>
+            <div class="metric-sub">
+              Edit <code>GOLDRUSH_TOKEN_ADDRESS</code> in the inline script to
+              monitor a different BASE_MAINNET token.
+            </div>
+          </div>
+
+          <div class="side-panel-section">
+            <div class="side-label">Last Event</div>
+            <div class="metric-main" id="lastEventType">–</div>
+            <div class="metric-sub" id="lastEventMeta">
+              Stream not started yet.
+            </div>
+          </div>
+
+          <div class="side-panel-section">
+            <div class="side-label">How this works</div>
+            <div class="code" id="howCode">
+subscription {
+  ohlcvCandlesForToken(
+    chain_name: BASE_MAINNET
+    token_addresses: ["0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b"]
+    interval: ONE_MINUTE
+    timeframe: ONE_HOUR
+  ) {
+    timestamp
+    open
+    high
+    low
+    close
+    volume
+  }
+}
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Simple GraphQL over WebSocket client using graphql-ws via ESM CDN -->
+    <script type="module">
+      import { createClient } from "https://esm.sh/graphql-ws@5.16.0";
+
+      // === CONFIG ===
+      // Replace with your actual GoldRush API key before running.
+      const GOLDRUSH_API_KEY = window.GOLDRUSH_API_KEY || "<GOLDRUSH_API_KEY>";
+      const CONNECTION_URL =
+        window.GOLDRUSH_WS_URL ||
+        "wss://gr-staging-v2.streaming.covalenthq.com/graphql";
+      const GOLDRUSH_TOKEN_ADDRESS =
+        window.GOLDRUSH_TOKEN_ADDRESS ||
+        "0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b"; // VIRTUAL on Base Mainnet
+
+      const wsDot = document.getElementById("wsDot");
+      const wsStatus = document.getElementById("wsStatus");
+      const streamDot = document.getElementById("streamDot");
+      const streamText = document.getElementById("streamText");
+      const rowsEl = document.getElementById("rows");
+      const emptyStateEl = document.getElementById("emptyState");
+      const intervalSelect = document.getElementById("intervalSelect");
+      const reconnectBtn = document.getElementById("reconnectBtn");
+      const lastEventType = document.getElementById("lastEventType");
+      const lastEventMeta = document.getElementById("lastEventMeta");
+      const tokenAddrShort = document.getElementById("tokenAddrShort");
+
+      tokenAddrShort.textContent =
+        GOLDRUSH_TOKEN_ADDRESS.slice(0, 6) +
+        "…" +
+        GOLDRUSH_TOKEN_ADDRESS.slice(-4);
+
+      let wsClient = null;
+      let activeDispose = null;
+
+      function setWsState(state, message) {
+        wsStatus.textContent = message;
+        if (state === "connecting") {
+          wsDot.classList.remove("live");
+          wsDot.style.background = "#f97316";
+        } else if (state === "live") {
+          wsDot.classList.add("live");
+        } else if (state === "closed") {
+          wsDot.classList.remove("live");
+          wsDot.style.background = "#ef4444";
+        }
+      }
+
+      function setStreamState(kind, message) {
+        streamText.textContent = message;
+        streamDot.classList.toggle("live", kind === "live");
+      }
+
+      function createWsClient() {
+        setWsState("connecting", "Connecting to GoldRush WebSocket…");
+        wsClient = createClient({
+          url: CONNECTION_URL,
+          connectionParams: {
+            GOLDRUSH_API_KEY
+          },
+          shouldRetry: (retries) => retries < 5,
+          on: {
+            connecting: () => {
+              setWsState("connecting", "Connecting to GoldRush WebSocket…");
+            },
+            opened: () => {
+              setWsState("live", "Connected · BASE_MAINNET");
+            },
+            closed: () => {
+              setWsState("closed", "WebSocket closed");
+            },
+            error: (err) => {
+              console.error("WebSocket error", err);
+              setWsState("closed", "WebSocket error");
+              lastEventType.textContent = "WebSocket error";
+              lastEventMeta.textContent =
+                "Check API key, network, and GoldRush endpoint.";
+              lastEventMeta.classList.add("error-text");
+            }
+          }
+        });
+      }
+
+      function subscribe(intervalEnum) {
+        if (!wsClient) {
+          createWsClient();
+        }
+
+        // Clean up previous subscription
+        if (activeDispose) {
+          activeDispose();
+          activeDispose = null;
+        }
+
+        rowsEl.innerHTML = "";
+        emptyStateEl.style.display = "block";
+
+        const query = `
+          subscription {
+            ohlcvCandlesForToken(
+              chain_name: BASE_MAINNET
+              token_addresses: ["${GOLDRUSH_TOKEN_ADDRESS}"]
+              interval: ${intervalEnum}
+              timeframe: ONE_HOUR
+            ) {
+              chain_name
+              interval
+              timeframe
+              timestamp
+              open
+              high
+              low
+              close
+              volume
+              base_token {
+                contract_name
+                contract_ticker_symbol
+              }
+            }
+          }
+        `;
+
+        setStreamState("connecting", "Subscribing for " + intervalEnum + "…");
+
+        activeDispose = wsClient.subscribe(
+          { query },
+          {
+            next: (data) => {
+              const payload = data?.data?.ohlcvCandlesForToken;
+              if (!payload || !Array.isArray(payload) || payload.length === 0) {
+                return;
+              }
+
+              emptyStateEl.style.display = "none";
+              setStreamState("live", "Receiving live OHLCV candles…");
+
+              const latest = payload[payload.length - 1];
+              const dt = new Date(latest.timestamp);
+
+              const tr = document.createElement("tr");
+
+              const tsTd = document.createElement("td");
+              tsTd.textContent = dt.toISOString().replace(".000Z", "Z");
+              tr.appendChild(tsTd);
+
+              function fmt(n, decimals = 6) {
+                if (typeof n !== "number") return "-";
+                return n.toFixed(decimals);
+              }
+
+              const cols = ["open", "high", "low", "close", "volume"];
+              cols.forEach((key, idx) => {
+                const td = document.createElement("td");
+                td.className = "numeric";
+                td.textContent = fmt(latest[key], key === "volume" ? 4 : 6);
+                tr.appendChild(td);
+              });
+
+              const tokenTd = document.createElement("td");
+              const tokenWrap = document.createElement("div");
+              tokenWrap.className = "token-cell";
+
+              const sym = document.createElement("span");
+              sym.className = "token-symbol";
+              sym.textContent = latest.base_token?.contract_ticker_symbol || "-";
+
+              const name = document.createElement("span");
+              name.className = "token-name";
+              name.textContent = latest.base_token?.contract_name || "";
+
+              tokenWrap.appendChild(sym);
+              tokenWrap.appendChild(name);
+              tokenTd.appendChild(tokenWrap);
+              tr.appendChild(tokenTd);
+
+              // Prepend latest row
+              rowsEl.insertBefore(tr, rowsEl.firstChild);
+              // Limit to last 40 rows
+              while (rowsEl.childElementCount > 40) {
+                rowsEl.removeChild(rowsEl.lastChild);
+              }
+
+              lastEventType.textContent = "New candle received";
+              lastEventMeta.textContent =
+                latest.interval + " · " + latest.timeframe + " · " + latest.chain_name;
+              lastEventMeta.classList.remove("error-text");
+              lastEventMeta.classList.add("success-text");
+            },
+            error: (err) => {
+              console.error("Subscription error", err);
+              setStreamState("error", "Subscription error");
+              lastEventType.textContent = "Subscription error";
+              lastEventMeta.textContent =
+                "Inspect console for details. Common causes: invalid API key, unsupported token.";
+              lastEventMeta.classList.remove("success-text");
+              lastEventMeta.classList.add("error-text");
+            },
+            complete: () => {
+              setStreamState("closed", "Subscription completed");
+            }
+          }
+        );
+      }
+
+      // Wire up controls
+      intervalSelect.addEventListener("change", () => {
+        subscribe(intervalSelect.value);
+      });
+
+      reconnectBtn.addEventListener("click", () => {
+        if (activeDispose) {
+          activeDispose();
+          activeDispose = null;
+        }
+        if (wsClient) {
+          try {
+            wsClient.dispose && wsClient.dispose();
+          } catch (e) {
+            console.warn("wsClient dispose error", e);
+          }
+        }
+        wsClient = null;
+        createWsClient();
+        subscribe(intervalSelect.value);
+      });
+
+      // Initial connect
+      createWsClient();
+      subscribe(intervalSelect.value);
+    </script>
+  </body>
+</html>
+
+
