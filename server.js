@@ -86,16 +86,38 @@ app.get("/app", (req, res) => {
   const appHtmlPath = path.join(__dirname, "public", "app.html");
   let html = fs.readFileSync(appHtmlPath, "utf8");
   
+  // Build configuration object from environment variables
+  const config = {};
+  
   // Inject GoldRush API key from environment
   const goldrushApiKey = process.env.GOLDRUSH_API_KEY || "";
   if (goldrushApiKey) {
-    // Inject script tag before closing </head> to set window.GOLDRUSH_API_KEY
-    html = html.replace(
-      "</head>",
-      `<script>window.GOLDRUSH_API_KEY = "${goldrushApiKey}";</script></head>`
-    );
+    config.GOLDRUSH_API_KEY = goldrushApiKey;
   } else {
     console.warn("[server] WARNING: GOLDRUSH_API_KEY not set in .env. Streaming may not work.");
+  }
+  
+  // Inject WebSocket URL from environment (optional, has default)
+  const goldrushWsUrl = process.env.GOLDRUSH_WS_URL;
+  if (goldrushWsUrl) {
+    config.GOLDRUSH_WS_URL = goldrushWsUrl;
+  }
+  
+  // Inject token address from environment (optional, has default)
+  const goldrushTokenAddress = process.env.GOLDRUSH_TOKEN_ADDRESS;
+  if (goldrushTokenAddress) {
+    config.GOLDRUSH_TOKEN_ADDRESS = goldrushTokenAddress;
+  }
+  
+  // Inject all config as a single script tag before closing </head>
+  if (Object.keys(config).length > 0) {
+    const configScript = Object.entries(config)
+      .map(([key, value]) => `window.${key} = ${JSON.stringify(value)};`)
+      .join("\n    ");
+    html = html.replace(
+      "</head>",
+      `<script>\n    ${configScript}\n  </script></head>`
+    );
   }
   
   res.send(html);

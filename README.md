@@ -32,8 +32,10 @@ X402_BASE_URL=http://localhost:4000
 # GoldRush Streaming API Configuration
 GOLDRUSH_API_KEY=cqt_YourGoldRushAPIKeyHere
 
-# Optional: Override defaults
+# Optional: Override WebSocket URL (default: wss://gr-staging-v2.streaming.covalenthq.com/graphql)
 # GOLDRUSH_WS_URL=wss://gr-staging-v2.streaming.covalenthq.com/graphql
+
+# Optional: Override default token address for BASE_MAINNET (default: VIRTUAL token)
 # GOLDRUSH_TOKEN_ADDRESS=0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b
 ```
 
