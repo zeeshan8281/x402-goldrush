@@ -20,23 +20,29 @@ npm start
 
 Then open `http://localhost:4000/` in your browser.
 
-### 2. Configure GoldRush Streaming
+### 2. Configure Environment Variables
 
-Edit `public/app.html` and set:
+Create a `.env` file in the project root with the following variables:
 
-- **`GOLDRUSH_API_KEY`** – replace `<GOLDRUSH_API_KEY>` with your real key.
-- (Optional) **`GOLDRUSH_WS_URL`** and **`GOLDRUSH_TOKEN_ADDRESS`** via `window` globals before the `<script type="module">` block if you want to override:
-  - `wss://gr-staging-v2.streaming.covalenthq.com/graphql`
-  - `0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b` (BASE_MAINNET VIRTUAL token)
+```env
+# X402 Payment Configuration
+X402_PRIVATE_KEY=0xYourPrivateKeyHere
+X402_BASE_URL=http://localhost:4000
 
-Example inline override (add before the `<script type="module">` in `app.html`):
+# GoldRush Streaming API Configuration
+GOLDRUSH_API_KEY=cqt_YourGoldRushAPIKeyHere
 
-```html
-<script>
-  window.GOLDRUSH_API_KEY = "cqt_...";
-  window.GOLDRUSH_TOKEN_ADDRESS = "0xYourBaseMainnetToken";
-</script>
+# Optional: Override defaults
+# GOLDRUSH_WS_URL=wss://gr-staging-v2.streaming.covalenthq.com/graphql
+# GOLDRUSH_TOKEN_ADDRESS=0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b
 ```
+
+**Important Notes:**
+- **`GOLDRUSH_API_KEY`**: Required for the streaming dashboard to work. Get your API key from [GoldRush API Dashboard](https://goldrush.dev/platform/auth/register/).
+- **`X402_PRIVATE_KEY`**: Your wallet private key (with `0x` prefix) for making X402 payments on Base Sepolia.
+- The `.env` file is already in `.gitignore` and won't be committed to git.
+
+The server automatically injects `GOLDRUSH_API_KEY` into the streaming dashboard page, so you don't need to edit `app.html` directly.
 
 ### 3. How the Flow Works (with a Real X402 Gateway)
 

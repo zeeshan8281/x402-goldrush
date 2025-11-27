@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const { paymentMiddleware } = require("x402-express");
 const { paidClient } = require("./x402Client");
 
@@ -82,7 +83,22 @@ app.post("/api/x402-pay", async (req, res) => {
 
 // Unprotected app page – shown after backend confirms payment.
 app.get("/app", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "app.html"));
+  const appHtmlPath = path.join(__dirname, "public", "app.html");
+  let html = fs.readFileSync(appHtmlPath, "utf8");
+  
+  // Inject GoldRush API key from environment
+  const goldrushApiKey = process.env.GOLDRUSH_API_KEY || "";
+  if (goldrushApiKey) {
+    // Inject script tag before closing </head> to set window.GOLDRUSH_API_KEY
+    html = html.replace(
+      "</head>",
+      `<script>window.GOLDRUSH_API_KEY = "${goldrushApiKey}";</script></head>`
+    );
+  } else {
+    console.warn("[server] WARNING: GOLDRUSH_API_KEY not set in .env. Streaming may not work.");
+  }
+  
+  res.send(html);
 });
 
 // Payment page (landing).
