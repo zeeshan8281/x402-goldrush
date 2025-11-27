@@ -540,11 +540,20 @@ subscription {
 
       function createWsClient() {
         setWsState("connecting", "Connecting to GoldRush WebSocket…");
+        
+        const connectionParams = {
+          GOLDRUSH_API_KEY: GOLDRUSH_API_KEY
+        };
+        
+        console.log("Creating WebSocket client with:", {
+          url: CONNECTION_URL,
+          apiKeySet: !!GOLDRUSH_API_KEY && GOLDRUSH_API_KEY !== "<GOLDRUSH_API_KEY>",
+          apiKeyPrefix: GOLDRUSH_API_KEY ? GOLDRUSH_API_KEY.substring(0, 10) : "NOT SET"
+        });
+        
         wsClient = createClient({
           url: CONNECTION_URL,
-          connectionParams: {
-            GOLDRUSH_API_KEY
-          },
+          connectionParams: connectionParams,
           shouldRetry: (retries) => retries < 5,
           on: {
             connecting: () => {
@@ -569,6 +578,16 @@ subscription {
       }
 
       function subscribe(intervalEnum) {
+        // Validate API key before subscribing
+        if (!GOLDRUSH_API_KEY || GOLDRUSH_API_KEY === "<GOLDRUSH_API_KEY>") {
+          console.error("GOLDRUSH_API_KEY is not set!");
+          setStreamState("error", "API key not configured");
+          lastEventType.textContent = "Configuration error";
+          lastEventMeta.textContent = "GOLDRUSH_API_KEY not set in .env file";
+          lastEventMeta.classList.add("error-text");
+          return;
+        }
+
         if (!wsClient) {
           createWsClient();
         }
@@ -581,6 +600,13 @@ subscription {
 
         rowsEl.innerHTML = "";
         emptyStateEl.style.display = "block";
+
+        console.log("Subscribing with config:", {
+          apiKey: GOLDRUSH_API_KEY ? GOLDRUSH_API_KEY.substring(0, 10) + "..." : "NOT SET",
+          wsUrl: CONNECTION_URL,
+          tokenAddress: GOLDRUSH_TOKEN_ADDRESS,
+          interval: intervalEnum
+        });
 
         const query = `
           subscription {
@@ -675,10 +701,28 @@ subscription {
             },
             error: (err) => {
               console.error("Subscription error", err);
-              setStreamState("error", "Subscription error");
+              console.error("Error details:", {
+                message: err.message,
+                errors: err.errors,
+                extensions: err.extensions,
+                locations: err.locations,
+                path: err.path
+              });
+              
+              // Extract more detailed error message
+              let errorMessage = "Subscription error";
+              if (err.errors && err.errors.length > 0) {
+                const firstError = err.errors[0];
+                errorMessage = firstError.message || "System error";
+                if (firstError.extensions) {
+                  console.error("Error extensions:", firstError.extensions);
+                }
+              }
+              
+              setStreamState("error", errorMessage);
               lastEventType.textContent = "Subscription error";
               lastEventMeta.textContent =
-                "Inspect console for details. Common causes: invalid API key, unsupported token.";
+                errorMessage + ". Check API key, token address, and network.";
               lastEventMeta.classList.remove("success-text");
               lastEventMeta.classList.add("error-text");
             },
